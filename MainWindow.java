@@ -304,9 +304,9 @@ public class MainWindow extends JFrame implements
 
     JMenuItem menuItem;
 
-    menuItem = new JMenuItem( "Timer Start" );
+    menuItem = new JMenuItem( "Test" );
     menuItem.setMnemonic( KeyEvent.VK_T );
-    menuItem.setActionCommand( "FileTimerStart" );
+    menuItem.setActionCommand( "FileTest" );
     menuItem.addActionListener( this );
     menuItem.setForeground( Color.white );
     menuItem.setBackground( Color.black );
@@ -408,12 +408,11 @@ public class MainWindow extends JFrame implements
 
     //////////////
     // File Menu:
-    if( command == "FileTimerStart" )
+    if( command == "FileTest" )
       {
-/*
-      wSites = new WebSites( mApp );
-      wSites.timerStart();
-*/
+      ViewPEFile peFile = new ViewPEFile( mApp );
+      peFile.startView();
+
       }
 
     if( command == "FileAnalyze" )
