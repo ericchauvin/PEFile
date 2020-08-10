@@ -1,10 +1,7 @@
 // Copyright Eric Chauvin 2020.
 
-// The main.exe file in Cpp is over 41,000 bytes.
-// Read that to a byte array.
 
-// Make a PE file as strings so it's a readable
-// PE file, then make that into the binary PE file.
+
 
 // For Linux it's the ELF format.
 // Executable and Linkable Format
@@ -12,5 +9,46 @@
 
 public class ViewPEFile
   {
+  private MainApp mApp;
+  private byte[] fileBytes;
 
+ 
+
+  private ViewPEFile()
+    {
+    }
+
+
+
+  public ViewPEFile( MainApp useApp )
+    {
+    mApp = useApp;
+    }
+
+  
+
+
+  public void startView()
+    {
+    StrA fileName = new StrA(
+                        "\\EricMain\\cpp\\main.exe" );
+
+    mApp.showStatusAsync( "Started PEFile view." );
+    fileBytes = FileUtility.readFileBytes(
+                                       mApp,
+                                           fileName );
+
+    if( fileBytes == null )
+      {
+      mApp.showStatusAsync( "fileBytes was null." );
+      return;
+      }
+
+    final int last = fileBytes.length;
+    mApp.showStatusAsync( "Bytes in file: " + last );
+    }
+
+
+
+  
   }
