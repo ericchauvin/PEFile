@@ -5,19 +5,16 @@
 // Portable Executable File
 // Common Object File Format (COFF)
 
+// For 64 bits PE32+ or PE+.
+// Almost exactly the same as the PE format
+// But see struct IMAGE_OPTIONAL_HEADER64
+// instead of IMAGE_OPTIONAL_HEADER.
+// 32 bit addresses are changed to 64 bit addresses.
+// See also the structs IMAGE_TLS_DIRECTORY
+// and IMAGE_LOAD_CONFIG_DIRECTORY.
+
 // For Linux it's the ELF format.
 // Executable and Linkable Format
-
-// Integer.toHexString( i )
-
-
-// A section is "the basic unit of code or data
-// within a PE or COFF file."
-// Sections can have different levels of memory
-// protection once they get mapped in to memory.
-// Like executable code is mapped to
-// an area that is read-only/executable.
-// And a data area is marked so it's not executable.
 
 
 // A PE file starts with an old MS-DOS structure at
@@ -26,9 +23,8 @@
 
 // winnt.h has struct definitions used for the PEFile.
 
-// After that is the real-mode DOS stub program
-// that just says something like "This program
-// requires Windows..." if you actually tried to
+// After that is the real-mode DOS stub program.
+// It would run if you actually tried to
 // run it on DOS.  (Obviously this file format
 // has a long history.)
 
@@ -80,8 +76,53 @@ public class ViewPEFile
     if( !dosHeader.readFromBytes( fileBytes ))
       return false;
 
-    long peOffSet = dosHeader.getOffsetOfPEFileHeader();
+    int peOffSet = dosHeader.getOffsetOfPEFileHeader();
 
+    mApp.showStatusAsync( "peOffSet: " + peOffSet );
+    // mApp.showStatusAsync( "peOffSet hex: " + Integer.toHexString( (int)peOffSet ));
+    // int test = 0x3C;
+    // mApp.showStatusAsync( "0x3C: " + test );
+
+    int b = Utility.ByteToShort( fileBytes[peOffSet] );
+    if( b != 'P' )
+      {
+      mApp.showStatusAsync( "Sig byte 0 is not P." );
+      return false;
+      }
+
+    b = Utility.ByteToShort( fileBytes[peOffSet + 1] );
+    if( b != 'E' )
+      {
+      mApp.showStatusAsync( "Sig byte 1 is not E." );
+      return false;
+      }
+
+    b = Utility.ByteToShort( fileBytes[peOffSet + 2] );
+    if( b != 0 )
+      {
+      mApp.showStatusAsync( "Sig byte 2 is not 0." );
+      return false;
+      }
+
+    b = Utility.ByteToShort( fileBytes[peOffSet + 3] );
+    if( b != 0 )
+      {
+      mApp.showStatusAsync( "Sig byte 3 is not 0." );
+      return false;
+      }
+
+    ImageFileHeader coffHeader = new 
+                             ImageFileHeader( mApp );
+
+    if( !coffHeader.readFromBytes( fileBytes,
+                                   peOffSet + 4 ))
+      {
+      // mApp.showStatusAsync( "" );
+      return false;
+      }
+
+
+    mApp.showStatusAsync( "PE file is OK." );
     return true;
     }
 
