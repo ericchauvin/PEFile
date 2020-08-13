@@ -38,25 +38,25 @@ public class ImageDosHeader
   // Using Java int and long because the struct
   // contains unsigned values.  See readFromBytes().
 
-  public int e_magic;  // Identify the kind of file this is.
-  public int e_cblp;   // Bytes on the last page.
-  public int e_cp; // Pages in file.
-  public int e_crlc; // Relocations.
-  public int e_cparhdr; // Size of header in paragraphs.
-  public int e_minalloc; // Minimum extra paragraphs needed
-  public int e_maxalloc; // Maximum extra paragraphs needed
-  public int e_ss; // Initial (relative) SS value
-  public int e_sp; // Initial SP value
-  public int e_csum; // Checksum
-  public int e_ip;   // Initial IP value
-  public int e_cs;   // Initial (relative) CS value
-  public int e_lfarlc; // File address of relocation table
-  public int e_ovno;   // Overlay number
-  // public int[] e_res = new int[4]; // Array of reserved words.
-  public int e_oemid;  // OEM identifier
-  public int e_oeminfo;  // OEM information
-  // public int[] e_res2 = new int[10]; //  Array of reserved words.
-  public long e_lfanew;   // Four bytes. Offest of PE
+  private int e_magic;  // Identify the kind of file this is.
+  private int e_cblp;   // Bytes on the last page.
+  private int e_cp; // Pages in file.
+  private int e_crlc; // Relocations.
+  private int e_cparhdr; // Size of header in paragraphs.
+  private int e_minalloc; // Minimum extra paragraphs needed
+  private int e_maxalloc; // Maximum extra paragraphs needed
+  private int e_ss; // Initial (relative) SS value
+  private int e_sp; // Initial SP value
+  private int e_csum; // Checksum
+  private int e_ip;   // Initial IP value
+  private int e_cs;   // Initial (relative) CS value
+  private int e_lfarlc; // File address of relocation table
+  private int e_ovno;   // Overlay number
+  // private int[] e_res = new int[4]; // Array of reserved words.
+  private int e_oemid;  // OEM identifier
+  private int e_oeminfo;  // OEM information
+  // private int[] e_res2 = new int[10]; //  Array of reserved words.
+  private int e_lfanew;   // Four bytes. Offest of PE
                           // file header.
 
 
@@ -246,6 +246,12 @@ public class ImageDosHeader
     b3 = Utility.ByteToShort( buf[62] );
     b4 = Utility.ByteToShort( buf[63] );
 
+    if( (b4 & 0x80) != 0 )
+      {
+      mApp.showStatusAsync( "The unsigned e_lfanew value has gone negative." );
+      return false;
+      }
+
     i = b4 << 24;
     i = i | (b3 << 16);
     i = i | (b2 << 8);
@@ -257,8 +263,11 @@ public class ImageDosHeader
     }
 
 
-  public long getOffsetOfPEFileHeader()
+  public int getOffsetOfPEFileHeader()
     {
+    // This offset can't be more than about 2 billion
+    // here because it would go negative.  It should
+    // be unsigned.
     return e_lfanew;
     }
 
