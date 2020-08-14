@@ -2,31 +2,8 @@
 
 
 
-/*
-winnt.h has this struct:
-
-typedef struct _IMAGE_DOS_HEADER
-{ WORD   e_magic;
-  WORD   e_cblp;
-  WORD   e_cp;
-  WORD   e_crlc;
-  WORD   e_cparhdr;
-  WORD   e_minalloc;
-  WORD   e_maxalloc;
-  WORD   e_ss;
-  WORD   e_sp;
-  WORD   e_csum;
-  WORD   e_ip;
-  WORD   e_cs;
-  WORD   e_lfarlc;
-  WORD   e_ovno;
-  WORD   e_res[4];
-  WORD   e_oemid;
-  WORD   e_oeminfo;
-  WORD   e_res2[10];
-  LONG   e_lfanew;
-} IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
-*/
+// winnt.h has this struct:
+// typedef struct _IMAGE_DOS_HEADER
 
 
 
@@ -82,7 +59,7 @@ public class ImageDosHeader
     final int last = buf.length;
     if( last < 64 )
       {
-      mApp.showStatusAsync( "The PE file buffer is less than 64 bytes long." );
+      mApp.showStatusAsync( "The PE file buffer is less than 64 bytes long. This can't be right." );
       return false;
       }
 
