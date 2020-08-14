@@ -5,13 +5,7 @@
 // Portable Executable File
 // Common Object File Format (COFF)
 
-// For 64 bits PE32+ or PE+.
-// Almost exactly the same as the PE format
-// But see struct IMAGE_OPTIONAL_HEADER64
-// instead of IMAGE_OPTIONAL_HEADER.
-// 32 bit addresses are changed to 64 bit addresses.
-// See also the structs IMAGE_TLS_DIRECTORY
-// and IMAGE_LOAD_CONFIG_DIRECTORY.
+// For 64 bits PE32+ see ImageOptionalHeader.java.
 
 // For Linux it's the ELF format.
 // Executable and Linkable Format
@@ -50,7 +44,6 @@ public class ViewPEFile
 
   
 
-
   public boolean startView()
     {
     StrA fileName = new StrA(
@@ -83,6 +76,7 @@ public class ViewPEFile
     // int test = 0x3C;
     // mApp.showStatusAsync( "0x3C: " + test );
 
+    // The Signature is PE00.
     int b = Utility.ByteToShort( fileBytes[peOffSet] );
     if( b != 'P' )
       {
@@ -116,6 +110,17 @@ public class ViewPEFile
 
     if( !coffHeader.readFromBytes( fileBytes,
                                    peOffSet + 4 ))
+      {
+      // mApp.showStatusAsync( "" );
+      return false;
+      }
+
+    int offset = peOffSet + 4 + 20;
+
+    ImageOptionalHeader optHeader = new 
+                          ImageOptionalHeader( mApp );
+
+    if( !optHeader.readFromBytes( fileBytes, offset ))
       {
       // mApp.showStatusAsync( "" );
       return false;
