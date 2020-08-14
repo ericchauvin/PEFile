@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities;
 
 class MainApp implements Runnable
   {
-  public static final String versionDate = "8/12/2020";
+  public static final String versionDate = "8/14/2020";
   private MainWindow mainWin;
   // public ConfigureFile mainConfigFile;
   private String[] argsArray;
